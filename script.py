@@ -176,8 +176,37 @@ if not creation_id:
 # STEP 5: WAIT FOR INSTAGRAM PROCESSING
 # ==========================================
 
-print("\nWaiting 30s for Instagram to process the video...")
-time.sleep(30)
+print("\nWaiting for Instagram processing...")
+
+max_attempts = 30
+
+for attempt in range(max_attempts):
+    status_response = requests.get(
+        f"https://graph.facebook.com/v20.0/{creation_id}",
+        params={
+            "fields": "status_code",
+            "access_token": ACCESS_TOKEN
+        }
+    )
+
+    status_result = status_response.json()
+    status = status_result.get("status_code")
+
+    print(f"Attempt {attempt+1}: Status = {status}")
+
+    if status == "FINISHED":
+        print("Instagram processing complete.")
+        break
+
+    elif status == "ERROR":
+        print("Instagram processing failed.")
+        exit()
+
+    time.sleep(10)
+
+else:
+    print("Instagram processing timeout.")
+    exit()
 
 # ==========================================
 # STEP 6: PUBLISH REEL
