@@ -45,4 +45,4 @@ jobs:
 
           DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
 
-        run: python upload_reel.py
+        run: python script.py
