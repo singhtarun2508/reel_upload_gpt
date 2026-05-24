@@ -1,0 +1,41 @@
+name: Upload Instagram Reel
+
+on:
+  schedule:
+    - cron: '30 12 * * *'   # 6:00 PM IST
+    - cron: '30 18 * * *'   # 12:00 AM IST
+    - cron: '30 19 * * *'   # 1:00 AM IST
+    - cron: '30 21 * * *'   # 3:00 AM IST
+  workflow_dispatch:         # allows manual trigger from GitHub UI
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write credentials.json
+        run: echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+
+      - name: Write token.json
+        run: echo '${{ secrets.GOOGLE_TOKEN }}' > token.json
+
+      - name: Run script
+        run: python script.py
+        env:
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+          INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+          INSTAGRAM_ID: ${{ secrets.INSTAGRAM_ID }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
