@@ -2,7 +2,6 @@ name: Upload Instagram Reel
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
     # 6:00 PM IST
     - cron: '30 12 * * *'
 
