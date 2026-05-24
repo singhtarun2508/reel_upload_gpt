@@ -17,23 +17,18 @@ from googleapiclient.http import MediaIoBaseDownload
 # ==========================================
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
-TOKEN_FILE = "token.json"
-CREDENTIALS_FILE = "credentials.json"
-DRIVE_FOLDER_ID = os.environ.get("DRIVE_FOLDER_ID")
+# TOKEN_FILE = "token.json"
+# CREDENTIALS_FILE = "credentials.json"
+DRIVE_FOLDER_ID = "1SkQgsJRR9G3lRYQlFzyR3wXz8gyjg4l3"
 
 def get_drive_service():
-    creds = None
-    if os.path.exists(TOKEN_FILE):
-        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open(TOKEN_FILE, "w") as f:
-            f.write(creds.to_json())
+    creds = Credentials.from_authorized_user_info(
+        eval(os.environ["GOOGLE_TOKEN"]),
+        SCOPES
+    )
+
     return build("drive", "v3", credentials=creds)
+
 
 drive_service = get_drive_service()
 
@@ -42,17 +37,17 @@ drive_service = get_drive_service()
 # ==========================================
 
 cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET")
+    cloud_name=os.environ["CLOUDINARY_CLOUD_NAME"],
+    api_key=os.environ["CLOUDINARY_API_KEY"],
+    api_secret=os.environ["CLOUDINARY_API_SECRET"]
 )
-
 # ==========================================
 # INSTAGRAM CONFIG
 # ==========================================
 
-ACCESS_TOKEN = os.environ.get("INSTAGRAM_TOKEN")
-INSTAGRAM_ID = os.environ.get("INSTAGRAM_ID")
+ACCESS_TOKEN = os.environ["IG_ACCESS_TOKEN"]
+INSTAGRAM_ID = os.environ["IG_ID"]
+DRIVE_FOLDER_ID = os.environ["DRIVE_FOLDER_ID"]
 
 # ==========================================
 # SORTING KEY
